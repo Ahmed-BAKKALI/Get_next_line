@@ -6,7 +6,7 @@
 /*   By: ahbakkal <ahbakkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/20 19:12:01 by ahbakkal          #+#    #+#             */
-/*   Updated: 2024/03/11 19:38:12 by ahbakkal         ###   ########.fr       */
+/*   Updated: 2024/03/16 16:47:26 by ahbakkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,35 +57,30 @@ char	*ft_one_line(char *rest)
 char	*ft_read(char **rest, char **buff, char **one_line, int fd)
 {
 	int	rd;
-	int j;
 
 	rd = -2;
-	j = 0;
 	while ((check_new_line(*rest) == -1 && rd != 0) 
 		|| (check_new_line(*rest) != -1 && rd == -2))
 	{
 		rd = read(fd, *buff, BUFFER_SIZE);
+		if (rd == -1)
+			return (NULL);
 		buff[0][rd] = 0;
 		*rest = ft_strjoin(*rest, *buff);
 		if ((check_new_line(*rest) != -1))
 		{
 			*one_line = ft_one_line(*rest);
-			j = (check_new_line(*rest) + 1);
-			*rest = ft_strdup(*(rest), j);
-			// printf("rest:%s", *rest);
+			*rest = ft_strdup(*(rest), (check_new_line(*rest) + 1));
 			return (*one_line);
 		}
 	}
 	if (ft_strlen(*rest) == 0)
 		return (free(*rest), *rest = 0, NULL);
-	// printf("test\n");
 	if (check_new_line(*rest) == -1 && rd == 0)
-	{
-		*one_line = ft_strdup(*rest, 0);
-		*rest = 0;
-	}
+		return(*one_line = ft_strdup(*rest, 0), *rest = 0, *one_line);
 	return (*one_line);
 }
+
 
 char	*get_next_line(int fd)
 {

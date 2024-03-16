@@ -6,7 +6,7 @@
 /*   By: ahbakkal <ahbakkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 18:59:57 by ahbakkal          #+#    #+#             */
-/*   Updated: 2024/03/11 19:24:05 by ahbakkal         ###   ########.fr       */
+/*   Updated: 2024/03/16 16:48:34 by ahbakkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ char	*ft_read(char **rest, char **buff, char **one_line, int fd)
 		|| (check_new_line(*rest) != -1 && rd == -2))
 	{
 		rd = read(fd, *buff, BUFFER_SIZE);
+		if (rd == -1)
+			return (NULL);
 		buff[0][rd] = 0;
 		*rest = ft_strjoin(*rest, *buff);
 		if ((check_new_line(*rest) != -1))
@@ -75,10 +77,7 @@ char	*ft_read(char **rest, char **buff, char **one_line, int fd)
 	if (ft_strlen(*rest) == 0)
 		return (free(*rest), *rest = 0, NULL);
 	if (check_new_line(*rest) == -1 && rd == 0)
-	{
-		*one_line = ft_strdup(*rest, 0);
-		*rest = 0;
-	}
+		return(*one_line = ft_strdup(*rest, 0), *rest = 0, *one_line);
 	return (*one_line);
 }
 
