@@ -6,7 +6,7 @@
 /*   By: ahbakkal <ahbakkal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 18:59:57 by ahbakkal          #+#    #+#             */
-/*   Updated: 2024/03/16 16:48:34 by ahbakkal         ###   ########.fr       */
+/*   Updated: 2024/03/18 15:49:20 by ahbakkal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,7 @@ char	*ft_one_line(char *rest)
 		{
 			one_line = malloc(i + 2);
 			if (!one_line)
-			{
-				free(rest);
-				rest = 0;
 				return (0);
-			}
 			ft_strlcpy(one_line, rest, i + 2);
 			break ;
 		}
@@ -70,6 +66,8 @@ char	*ft_read(char **rest, char **buff, char **one_line, int fd)
 		if ((check_new_line(*rest) != -1))
 		{
 			*one_line = ft_one_line(*rest);
+			if (*one_line == NULL)
+				return (free(*rest), *rest = 0, NULL);
 			*rest = ft_strdup(*(rest), (check_new_line(*rest) + 1));
 			return (*one_line);
 		}
@@ -77,7 +75,7 @@ char	*ft_read(char **rest, char **buff, char **one_line, int fd)
 	if (ft_strlen(*rest) == 0)
 		return (free(*rest), *rest = 0, NULL);
 	if (check_new_line(*rest) == -1 && rd == 0)
-		return(*one_line = ft_strdup(*rest, 0), *rest = 0, *one_line);
+		return (*one_line = ft_strdup(*rest, 0), *rest = 0, *one_line);
 	return (*one_line);
 }
 
